@@ -65,7 +65,6 @@
 --		Output 	-	o_adc_valid: ADC Read Value Valid ('0': Not Valid, '1': Valid)
 --		Output 	-	o_adc_value: ADC Read Value
 --		Output 	-	o_ready: ADC Ready Status ('0': NOT Ready, '1': Ready)
---		Output 	-	o_error: ADC Error Status ('0': No Error, '1': Error)
 --		In/Out 	-	io_scl: I2C Serial Clock ('0'-'Z'(as '1') values, working with Pull-Up)
 --		In/Out 	-	io_sda: I2C Serial Data ('0'-'Z'(as '1') values, working with Pull-Up)
 ------------------------------------------------------------------------
