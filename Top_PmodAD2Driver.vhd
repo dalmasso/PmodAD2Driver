@@ -5,6 +5,8 @@
 -- Description:
 --      Top Module including Pmod AD2 Driver for the 4 Channels of 12-bit Analog-to-Digital Converter AD7991.
 --
+-- WARNING: /!\ Require Pull-Up on SCL and SDA pins /!\
+--
 -- Ports
 --		Input 	-	i_sys_clock: System Input Clock
 --		Input 	-	i_reset: Module Reset ('0': No Reset, '1': Reset)

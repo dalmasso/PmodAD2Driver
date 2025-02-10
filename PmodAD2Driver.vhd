@@ -10,15 +10,16 @@
 --
 -- Usage:
 --		User specifies inputs: I2C mode (i_mode), ADC Slave Address (i_addr), Configuration Byte (i_config_byte, write mode only) and the Last Read Cycle trigger (i_last_read, read mode only)
---		The i_enable signal can be triggered (set to '1') to begin transmission.
---		When started, the PmodAD2Driver executes the complete operation cycle (configurations or ADC conversions) independently of the new i_enable signal value.
+--		The transmission begin when the i_enable signal is set to '1'.
+--		When started, the PmodAD2Driver executes the complete operation cycle (configurations or ADC conversions) independently of the new i_enable signal value (the i_enable signal can be reset).
 --		At the end of the operation cycle, if the i_enable signal is still set to '1', the PmodAD2Driver executes the operation again with the current inputs.
 --		The o_ready signal (set to '1') indicates the PmodAD2Driver is ready to process new operation. The o_ready signal is set to '0' to acknowledge the receipt.
 --		The o_ready signal is set to '0' to acknowledge the receipt.
 --		In Write mode, the PmodAD2Driver writes the Configuration byte into the ADC register and stop the transmission.
 --		In Read mode, the PmodAD2Driver always reads 2-byte ADC conversion values channel-by-channel (according to ADC configuration).
 --		The ADC value (o_adc_value) is available when its validity signal (o_adc_valid) is asserted.
---		In Read mode, while the i_last_read is NOT set to '1', the PmodAD2Driver execute the read operation.
+--		In Read mode, while the i_last_read is NOT set to '1', the PmodAD2Driver execute the 2-byte ADC conversion value.
+--		When the i_last_read is set to '1', the PmodAD2Driver ends the 2-byte ADC conversion value and return to IDLE state, and waits for the i_enable signal is set to '1'.
 --
 --		ADC AD7991 has 2 I2C Addresses:
 --		AD7991-0: 010 1000
