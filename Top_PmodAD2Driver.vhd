@@ -10,9 +10,8 @@
 -- Ports
 --		Input 	-	i_sys_clock: System Input Clock
 --		Input 	-	i_reset: Module Reset ('0': No Reset, '1': Reset)
---		Input 	-	i_enable: Module Enable ('0': Disable, '1': Enable)
---		Input 	-	i_last_read: Indicates the Last Read Operation ('0': Continue Read Cycle, '1': Last Read Cycle)
---		Output 	-	o_led: ACD Value
+--		Input 	-	i_mode_op: Module Mode Operation ('0': ADC Configuration, '1': ADC Conversion)
+--		Output 	-	o_led: ADC Value
 --		In/Out 	-	io_scl: I2C Serial Clock ('0'-'Z'(as '1') values, working with Pull-Up)
 --		In/Out 	-	io_sda: I2C Serial Data ('0'-'Z'(as '1') values, working with Pull-Up)
 ------------------------------------------------------------------------
@@ -26,8 +25,7 @@ ENTITY Top_PmodAD2Driver is
 PORT(
 	i_sys_clock: IN STD_LOGIC;
     i_reset: IN STD_LOGIC;
-    i_enable: IN STD_LOGIC;
-    i_last_read: IN STD_LOGIC;
+    i_mode_op: IN STD_LOGIC;
     o_led: OUT UNSIGNED(15 downto 0);
 	io_scl: INOUT STD_LOGIC;
     io_sda: INOUT STD_LOGIC
@@ -66,13 +64,16 @@ END COMPONENT;
 ------------------------------------------------------------------------
 -- Signal Declarations
 ------------------------------------------------------------------------
--- Pmod AD2 Configuration Init
-signal pmodad2_init_end: STD_LOGIC := '0';
+-- Pmode States
+TYPE pmodState is (IDLE, CONFIG, END_CONFIG, READ_ADC, END_READ, END_OF_OP);
+signal state: pmodState := IDLE;
+signal next_state: pmodState;
 
--- Pmod AD2 Ready Handler
+-- Pmod AD2 Enable
+signal pmodad2_enable: STD_LOGIC := '0';
+
+-- Pmod AD2 Ready
 signal pmodad2_ready: STD_LOGIC := '0';
-signal pmodad2_ready_reg: STD_LOGIC := '0';
-signal pmodad2_ready_rising: STD_LOGIC := '0';
 
 -- Pmode AD2 Input Register
 signal mode_reg: STD_LOGIC := '0';
@@ -86,60 +87,84 @@ signal adc_value_reg: UNSIGNED(15 downto 0) := (others => '0');
 ------------------------------------------------------------------------
 begin
 
-    ----------------------------
-	-- Pmod ADZ Ready Handler --
-	----------------------------
+	------------------------
+	-- Pmod State Machine --
+	------------------------
+    -- Pmod State
 	process(i_sys_clock)
 	begin
-
-		if rising_edge(i_sys_clock) then
-            pmodad2_ready_reg <= pmodad2_ready;
-        end if;
-    end process;
-    pmodad2_ready_rising <= pmodad2_ready and not(pmodad2_ready_reg);
-
-    -------------------
-	-- Pmod AD2 Mode --
-	-------------------
-	process(i_sys_clock)
-	begin
-
 		if rising_edge(i_sys_clock) then
 
             -- Reset
             if (i_reset = '1') then
-                pmodad2_init_end <= '0';
+                state <= IDLE;
 
-            -- Config Mode
-            elsif (pmodad2_ready_rising = '1') then
-                pmodad2_init_end <= '1';
-            end if;
-        end if;
-    end process;
+            -- Next State
+			else
+				state <= next_state;
+			end if;
+			
+		end if;
+	end process;
 
-	----------------------------
-	-- Pmod AD2 Configuration --
-	----------------------------
-	process(i_sys_clock)
+    -- Pmod Next State    
+    process(state, i_mode_op, pmodad2_ready, adc_valid_reg)
 	begin
+		case state is
+			when IDLE =>    if (pmodad2_ready = '1') then
+                                if (i_mode_op = '0') then
+                                    next_state <= CONFIG;
+                                else
+                                    next_state <= READ_ADC;
+                                end if;
+                            else
+                                next_state <= IDLE;
+							end if;
 
-		if rising_edge(i_sys_clock) then
+			-- Configure ADC
+			when CONFIG => if (pmodad2_ready = '0') then
+                                next_state <= END_CONFIG;
+                            else
+                                next_state <= CONFIG;
+							end if;
 
-            -- Reset Digital Value
-            if (i_reset = '1') then
-                mode_reg <= '0';
+            -- End of Configuration
+            when END_CONFIG => if (pmodad2_ready = '1') then
+                                    next_state <= END_OF_OP;
+                               else
+                                    next_state <= END_CONFIG;
+                               end if;
+
+            -- Read ADC
+            when READ_ADC => if (pmodad2_ready = '0') then
+                                next_state <= END_READ;
+                             else
+                                next_state <= READ_ADC;
+                             end if;
             
-            -- Config Mode
-            elsif (pmodad2_init_end = '0') then
-                mode_reg <= '0';
+            -- End Read ADC
+            when END_READ => if (adc_valid_reg = '1') then
+                                next_state <= END_OF_OP;
+                             else
+                                next_state <= END_READ;
+                             end if;
 
-            -- Signal Mode
-            else
-                mode_reg <= '1';
-            end if;
+            -- End of Cycle
+            when END_OF_OP => next_state <= END_OF_OP;
 
-        end if;
+            when others => next_state <= IDLE;
+        end case;
     end process;
+
+	---------------------
+	-- Pmod AD2 Enable --
+	---------------------
+    pmodad2_enable <= '0' when state = IDLE or state = END_OF_OP else '1';
+
+	-------------------
+	-- Pmod AD2 Mode --
+	-------------------
+    mode_reg <= '0' when state = CONFIG or state = END_CONFIG else '1';
 
     ----------------------------
 	-- Pmod AD2 Digital Value --
@@ -170,11 +195,11 @@ begin
     
     port map (
         i_sys_clock => i_sys_clock,
-        i_enable => i_enable,
+        i_enable => pmodad2_enable,
         i_mode => mode_reg,
         i_addr => "0101000",
         i_config_byte => "00010000",
-        i_last_read => i_last_read,
+        i_last_read => '1',
         o_adc_valid => adc_valid_reg,
         o_adc_value => adc_value_reg,
         o_ready => pmodad2_ready,

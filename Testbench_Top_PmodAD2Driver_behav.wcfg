@@ -11,14 +11,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000000 us"></ZoomStartTime>
-      <ZoomEndTime time="2,001.000000 us"></ZoomEndTime>
-      <Cursor1Time time="810.025000 us"></Cursor1Time>
+      <ZoomEndTime time="1,001.000001 us"></ZoomEndTime>
+      <Cursor1Time time="1,001.000000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="180"></NameColumnWidth>
+      <NameColumnWidth column_width="176"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="21" />
+   <WVObjectSize size="17" />
    <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/i_sys_clock">
       <obj_property name="ElementShortName">i_sys_clock</obj_property>
       <obj_property name="ObjectShortName">i_sys_clock</obj_property>
@@ -27,29 +27,9 @@
       <obj_property name="ElementShortName">i_reset</obj_property>
       <obj_property name="ObjectShortName">i_reset</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/i_enable">
-      <obj_property name="ElementShortName">i_enable</obj_property>
-      <obj_property name="ObjectShortName">i_enable</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/i_last_read">
-      <obj_property name="ElementShortName">i_last_read</obj_property>
-      <obj_property name="ObjectShortName">i_last_read</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/pmodad2_ready">
-      <obj_property name="ElementShortName">pmodad2_ready</obj_property>
-      <obj_property name="ObjectShortName">pmodad2_ready</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/pmodad2_ready_reg">
-      <obj_property name="ElementShortName">pmodad2_ready_reg</obj_property>
-      <obj_property name="ObjectShortName">pmodad2_ready_reg</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/pmodad2_ready_rising">
-      <obj_property name="ElementShortName">pmodad2_ready_rising</obj_property>
-      <obj_property name="ObjectShortName">pmodad2_ready_rising</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/pmodad2_init_end">
-      <obj_property name="ElementShortName">pmodad2_init_end</obj_property>
-      <obj_property name="ObjectShortName">pmodad2_init_end</obj_property>
+   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/i_mode_op">
+      <obj_property name="ElementShortName">i_mode_op</obj_property>
+      <obj_property name="ObjectShortName">i_mode_op</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/mode_reg">
       <obj_property name="ElementShortName">mode_reg</obj_property>
@@ -59,13 +39,17 @@
       <obj_property name="ElementShortName">bus_busy</obj_property>
       <obj_property name="ObjectShortName">bus_busy</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/inst_PmodAD2Driver/bus_arbitration">
-      <obj_property name="ElementShortName">bus_arbitration</obj_property>
-      <obj_property name="ObjectShortName">bus_arbitration</obj_property>
+   <wvobject type="other" fp_name="/Testbench_Top_PmodAD2Driver/uut/state">
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/inst_PmodAD2Driver/scl_stretching">
-      <obj_property name="ElementShortName">scl_stretching</obj_property>
-      <obj_property name="ObjectShortName">scl_stretching</obj_property>
+   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/pmodad2_enable">
+      <obj_property name="ElementShortName">pmodad2_enable</obj_property>
+      <obj_property name="ObjectShortName">pmodad2_enable</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/pmodad2_ready">
+      <obj_property name="ElementShortName">pmodad2_ready</obj_property>
+      <obj_property name="ObjectShortName">pmodad2_ready</obj_property>
    </wvobject>
    <wvobject type="other" fp_name="/Testbench_Top_PmodAD2Driver/uut/inst_PmodAD2Driver/state">
       <obj_property name="ElementShortName">state</obj_property>
