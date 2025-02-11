@@ -131,7 +131,7 @@ mode <= '1', -- Read
 addr <= "0101000", "0101001" after 300 us;
 
 -- Config Byte
-config_byte <= x"87";
+config_byte <= x"10";
 
 -- Last Read
 last_read <= '0', '1' after 351.5 us;
@@ -144,7 +144,7 @@ sda <= 	'Z',
         -- Write Slave Address ACK
         '0' after 111.015 us,
 
-        -- Read Byte 1.1
+        -- Read Byte 1.1 (0xD7)
         '1' after 121.015 us,
         '1' after 131.015 us,
         '0' after 141.015 us,
@@ -155,7 +155,7 @@ sda <= 	'Z',
         '1' after 191.015 us,
         'Z' after 201.015 us,
 
-        -- Read Byte 2.1
+        -- Read Byte 2.1 (0x15)
         '0' after 211.015 us,
         '0' after 221.015 us,
         '0' after 231.015 us,
@@ -166,7 +166,7 @@ sda <= 	'Z',
         '1' after 281.015 us,
         'Z' after 291.015 us,
 
-        -- Read Byte 1.2
+        -- Read Byte 1.2 (0xD0)
         '1' after 301.015 us,
         '1' after 311.015 us,
         '0' after 321.015 us,
@@ -177,7 +177,7 @@ sda <= 	'Z',
         '0' after 371.015 us,
         'Z' after 381.015 us,
 
-        -- Read Byte 2.2
+        -- Read Byte 2.2 (0x50)
         '0' after 391.015 us,
         '1' after 401.015 us,
         '0' after 411.015 us,

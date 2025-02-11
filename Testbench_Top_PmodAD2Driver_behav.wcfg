@@ -15,10 +15,10 @@
       <Cursor1Time time="1,001.000000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="176"></NameColumnWidth>
+      <NameColumnWidth column_width="172"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="17" />
+   <WVObjectSize size="16" />
    <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/i_sys_clock">
       <obj_property name="ElementShortName">i_sys_clock</obj_property>
       <obj_property name="ObjectShortName">i_sys_clock</obj_property>
@@ -27,21 +27,21 @@
       <obj_property name="ElementShortName">i_reset</obj_property>
       <obj_property name="ObjectShortName">i_reset</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/i_mode_op">
-      <obj_property name="ElementShortName">i_mode_op</obj_property>
-      <obj_property name="ObjectShortName">i_mode_op</obj_property>
+   <wvobject type="other" fp_name="/Testbench_Top_PmodAD2Driver/uut/read_timer">
+      <obj_property name="ElementShortName">read_timer</obj_property>
+      <obj_property name="ObjectShortName">read_timer</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/mode_reg">
-      <obj_property name="ElementShortName">mode_reg</obj_property>
-      <obj_property name="ObjectShortName">mode_reg</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/inst_PmodAD2Driver/bus_busy">
-      <obj_property name="ElementShortName">bus_busy</obj_property>
-      <obj_property name="ObjectShortName">bus_busy</obj_property>
+   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/read_enable">
+      <obj_property name="ElementShortName">read_enable</obj_property>
+      <obj_property name="ObjectShortName">read_enable</obj_property>
    </wvobject>
    <wvobject type="other" fp_name="/Testbench_Top_PmodAD2Driver/uut/state">
       <obj_property name="ElementShortName">state</obj_property>
       <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/mode_reg">
+      <obj_property name="ElementShortName">mode_reg</obj_property>
+      <obj_property name="ObjectShortName">mode_reg</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/pmodad2_enable">
       <obj_property name="ElementShortName">pmodad2_enable</obj_property>
@@ -54,10 +54,6 @@
    <wvobject type="other" fp_name="/Testbench_Top_PmodAD2Driver/uut/inst_PmodAD2Driver/state">
       <obj_property name="ElementShortName">state</obj_property>
       <obj_property name="ObjectShortName">state</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/Testbench_Top_PmodAD2Driver/uut/inst_PmodAD2Driver/i2c_clock_divider">
-      <obj_property name="ElementShortName">i2c_clock_divider</obj_property>
-      <obj_property name="ObjectShortName">i2c_clock_divider</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/Testbench_Top_PmodAD2Driver/uut/inst_PmodAD2Driver/i2c_clock_enable">
       <obj_property name="ElementShortName">i2c_clock_enable</obj_property>

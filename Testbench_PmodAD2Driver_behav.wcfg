@@ -11,14 +11,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000000 us"></ZoomStartTime>
-      <ZoomEndTime time="801.000000 us"></ZoomEndTime>
-      <Cursor1Time time="471.025000 us"></Cursor1Time>
+      <ZoomEndTime time="1,001.000001 us"></ZoomEndTime>
+      <Cursor1Time time="1,001.000000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="180"></NameColumnWidth>
+      <NameColumnWidth column_width="176"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="26" />
+   <WVObjectSize size="24" />
    <wvobject type="logic" fp_name="/Testbench_PmodAD2Driver/uut/i_sys_clock">
       <obj_property name="ElementShortName">i_sys_clock</obj_property>
       <obj_property name="ObjectShortName">i_sys_clock</obj_property>
@@ -42,14 +42,6 @@
    <wvobject type="logic" fp_name="/Testbench_PmodAD2Driver/uut/i_last_read">
       <obj_property name="ElementShortName">i_last_read</obj_property>
       <obj_property name="ObjectShortName">i_last_read</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_PmodAD2Driver/uut/bus_busy">
-      <obj_property name="ElementShortName">bus_busy</obj_property>
-      <obj_property name="ObjectShortName">bus_busy</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_PmodAD2Driver/uut/bus_arbitration">
-      <obj_property name="ElementShortName">bus_arbitration</obj_property>
-      <obj_property name="ObjectShortName">bus_arbitration</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/Testbench_PmodAD2Driver/uut/o_ready">
       <obj_property name="ElementShortName">o_ready</obj_property>
@@ -95,6 +87,10 @@
       <obj_property name="ElementShortName">io_sda</obj_property>
       <obj_property name="ObjectShortName">io_sda</obj_property>
    </wvobject>
+   <wvobject type="logic" fp_name="/Testbench_PmodAD2Driver/uut/sda_in_reg">
+      <obj_property name="ElementShortName">sda_in_reg</obj_property>
+      <obj_property name="ObjectShortName">sda_in_reg</obj_property>
+   </wvobject>
    <wvobject type="logic" fp_name="/Testbench_PmodAD2Driver/uut/sda_out">
       <obj_property name="ElementShortName">sda_out</obj_property>
       <obj_property name="ObjectShortName">sda_out</obj_property>
@@ -111,10 +107,6 @@
    <wvobject type="logic" fp_name="/Testbench_PmodAD2Driver/uut/bit_counter_end">
       <obj_property name="ElementShortName">bit_counter_end</obj_property>
       <obj_property name="ObjectShortName">bit_counter_end</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/Testbench_PmodAD2Driver/uut/sda_in">
-      <obj_property name="ElementShortName">sda_in</obj_property>
-      <obj_property name="ObjectShortName">sda_in</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/Testbench_PmodAD2Driver/uut/data_read_reg">
       <obj_property name="ElementShortName">data_read_reg[15:0]</obj_property>

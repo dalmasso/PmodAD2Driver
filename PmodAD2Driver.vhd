@@ -171,42 +171,17 @@ signal bit_counter: UNSIGNED(2 downto 0) := (others => '0');
 signal bit_counter_end: STD_LOGIC := '0';
 
 -- I2C SCL
-signal scl_in: STD_LOGIC := '1';
 signal scl_reg_out: STD_LOGIC := '1';
 
 -- I2C SDA
-signal sda_in: STD_LOGIC := '1';
+signal sda_in_reg: STD_LOGIC := '1';
 signal sda_out: STD_LOGIC := '1';
-
--- I2C Bus Analyzer
-signal bus_busy: STD_LOGIC := '0';
-signal bus_arbitration: STD_LOGIC := '0';
-signal scl_stretching: STD_LOGIC := '0';
 
 ------------------------------------------------------------------------
 -- Module Implementation
 ------------------------------------------------------------------------
 begin
-
-	------------------------
-	-- I2C SCL/SDA Inputs --
-	------------------------
-	scl_in <= io_scl;
-	sda_in <= io_sda;
-
-	----------------------
-	-- I2C Bus Analyzer --
-	----------------------
-	inst_i2cBusAnalyzer: I2CBusAnalyzer port map(
-		i_clock => i_sys_clock,
-		i_scl_master => scl_reg_out,
-		i_scl_line => scl_in,
-		i_sda_master => sda_out,
-		i_sda_line => sda_in,
-		o_bus_busy => bus_busy,
-		o_bus_arbitration => bus_arbitration,
-		o_scl_stretching => scl_stretching);
-
+	
 	--------------------------------------
 	-- Pmod AD2 Enable & Mode Registers --
 	--------------------------------------
@@ -235,8 +210,8 @@ begin
 			if (enable_reg = '0') or (i2c_clock_divider = CLOCK_DIV-1) then
 				i2c_clock_divider <= 0;
 
-			-- Increment I2C Clock Divider (when no SCL Stretching)
-			elsif (scl_stretching = '0') then
+			-- Increment I2C Clock Divider
+			else
 				i2c_clock_divider <= i2c_clock_divider +1;
 			end if;
 		end if;
@@ -248,38 +223,28 @@ begin
 	process(i_sys_clock)
 	begin
 		if rising_edge(i_sys_clock) then
-
-			-- SCL Stretching (Waiting no SCL Stretching)
-			if (scl_stretching = '0') then
-
-				-- I2C Clock Enable
-				if (i2c_clock_divider = CLOCK_DIV-1) then
-					i2c_clock_enable <= '1';
-				else
-					i2c_clock_enable <= '0';
-				end if;
-
-				-- I2C Clock Rising
-				if (i2c_clock_divider = CLOCK_DIV_X2_1_4-1) then
-					i2c_clock_enable_rising <= '1';
-				else
-					i2c_clock_enable_rising <= '0';
-				end if;
-
-				-- I2C Clock Falling
-				if (i2c_clock_divider = CLOCK_DIV_X2_3_4-1) then
-					i2c_clock_enable_falling <= '1';
-				else
-					i2c_clock_enable_falling <= '0';
-				end if;
 			
-			-- SCL Stretching (Disable all Clock Enables)
+			-- I2C Clock Enable
+			if (i2c_clock_divider = CLOCK_DIV-1) then
+				i2c_clock_enable <= '1';
 			else
 				i2c_clock_enable <= '0';
-				i2c_clock_enable_rising <= '0';
-				i2c_clock_enable_falling <= '0';
-
 			end if;
+
+			-- I2C Clock Rising
+			if (i2c_clock_divider = CLOCK_DIV_X2_1_4-1) then
+				i2c_clock_enable_rising <= '1';
+			else
+				i2c_clock_enable_rising <= '0';
+			end if;
+
+			-- I2C Clock Falling
+			if (i2c_clock_divider = CLOCK_DIV_X2_3_4-1) then
+				i2c_clock_enable_falling <= '1';
+			else
+				i2c_clock_enable_falling <= '0';
+			end if;
+
 		end if;
 	end process;
 
@@ -300,10 +265,10 @@ begin
 	end process;
 
 	-- I2C Next State
-	process(state, enable_reg, bus_busy, bus_arbitration, bit_counter_end, sda_in, mode_reg, i_last_read)
+	process(state, enable_reg, bit_counter_end, sda_in_reg, mode_reg, i_last_read)
 	begin
 		case state is
-			when IDLE =>    if (enable_reg = '1') and (bus_busy = '0') then
+			when IDLE =>    if (enable_reg = '1') then
                                 next_state <= START_TX;
                             else
                                 next_state <= IDLE;
@@ -318,10 +283,6 @@ begin
 							if (bit_counter_end = '1') then
 								next_state <= SLAVE_ADDR_ACK;
 
-							-- Master Loses Arbitration (during Write Cycle)
-							elsif (bus_arbitration = '0') then
-								next_state <= IDLE;
-
 							else
 								next_state <= WRITE_SLAVE_ADDR;
 							end if;
@@ -329,7 +290,7 @@ begin
 			-- Slave Address ACK
 			when SLAVE_ADDR_ACK =>
 							-- Slave ACK Error or Stop Command
-							if (sda_in /= TRANSMISSION_ACK_BIT) then
+							if (sda_in_reg /= TRANSMISSION_ACK_BIT) then
 								next_state <= STOP_TX;
 
 							-- Write Mode
@@ -346,10 +307,6 @@ begin
 							-- End of Write Byte Cycle
 							if (bit_counter_end = '1') then
 								next_state <= WRITE_BYTE_ACK;
-
-							-- Master Loses Arbitration (during Write Cycle)
-							elsif (bus_arbitration = '0') then
-								next_state <= IDLE;
 
 							else
 								next_state <= WRITE_BYTE;
@@ -508,9 +465,24 @@ begin
 	-- ('0' or 'Z' values)
 	io_sda <= '0' when sda_out = '0' else TRANSMISSION_IDLE;
 
-	----------------------------
-	-- I2C SDA Input Register --
-	----------------------------
+	-------------------
+	-- I2C SDA Input --
+	-------------------
+	process(i_sys_clock)
+	begin
+		if rising_edge(i_sys_clock) then
+
+			-- I2C Clock Enable Rising Edge
+			if (i2c_clock_enable_rising = '1') then
+				sda_in_reg <= io_sda;
+			end if;
+			
+		end if;
+	end process;
+
+	--------------------
+	-- Pmod AD2 Value --
+	--------------------
 	process(i_sys_clock)
 	begin
 		if rising_edge(i_sys_clock) then
@@ -520,7 +492,7 @@ begin
 				
 				-- Read SDA Input
 				if (state = READ_BYTE_1) or (state = READ_BYTE_2) then
-					data_read_reg <= data_read_reg(14 downto 0) & sda_in;
+					data_read_reg <= data_read_reg(14 downto 0) & sda_in_reg;
 				end if;
 
 			end if;
@@ -528,22 +500,25 @@ begin
 	end process;
 	o_adc_value <= data_read_reg;
 
-	----------------------------------
-	-- I2C SDA Input Register Valid --
-	----------------------------------
+	--------------------------
+	-- Pmod AD2 Valid Value --
+	--------------------------
 	process(i_sys_clock)
 	begin
 		if rising_edge(i_sys_clock) then
 
-			-- Disable ADC Value Valid (New 2-byte Read Cycle)
-			if (state = START_TX) or (state = READ_BYTE_1) then
-				data_read_reg_valid <= '0';
-			
-			-- Enable ADC Value Valid Data (End of 2-byte Read Cycle)
-			elsif (state = READ_BYTE_2_ACK) or (state = READ_BYTE_2_NO_ACK) then
-				data_read_reg_valid <= '1';
+			-- I2C Clock Enable
+			if (i2c_clock_enable = '1') then
+
+				-- Disable ADC Value Valid (New 2-byte Read Cycle)
+				if (state = START_TX) or (state = READ_BYTE_1) then
+					data_read_reg_valid <= '0';
+				
+				-- Enable ADC Value Valid Data (End of 2-byte Read Cycle)
+				elsif (state = READ_BYTE_2_ACK) or (state = READ_BYTE_2_NO_ACK) then
+					data_read_reg_valid <= '1';
+				end if;
 			end if;
-			
 		end if;
 	end process;
 	o_adc_valid <= data_read_reg_valid;
