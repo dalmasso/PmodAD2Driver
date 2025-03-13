@@ -61,7 +61,7 @@ Conversion Result Register (16-bit Read Only)
 |-----|-----|-------|-------|-----|-----|----|----|----|----|----|----|----|----|----|----|
 |  0  |  0  | CHID1 | CHID0 | MSB | B10 | B9 | B8 | B7 | B6 | B5 | B4 | B3 | B2 | B1 | B0 |
 
-## Signal Generator Pin Description
+## Pin Description
 
 ### Generics
 
